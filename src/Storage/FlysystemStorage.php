@@ -5,7 +5,7 @@ namespace Kevinrob\GuzzleCache\Storage;
 use Kevinrob\GuzzleCache\CacheEntry;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
-use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FilesystemAdapter;
 
 class FlysystemStorage implements CacheStorageInterface
 {
@@ -15,7 +15,7 @@ class FlysystemStorage implements CacheStorageInterface
      */
     protected $filesystem;
 
-    public function __construct(AdapterInterface $adapter)
+    public function __construct(FilesystemAdapter $adapter)
     {
         $this->filesystem = new Filesystem($adapter);
     }
@@ -25,7 +25,8 @@ class FlysystemStorage implements CacheStorageInterface
      */
     public function fetch($key)
     {
-        if ($this->filesystem->has($key)) {
+
+        if ($this->filesystem->fileExists($key)) {
             // The file exist, read it!
             $data = @unserialize(
                 $this->filesystem->read($key)
@@ -35,7 +36,6 @@ class FlysystemStorage implements CacheStorageInterface
                 return $data;
             }
         }
-
         return;
     }
 
@@ -44,7 +44,7 @@ class FlysystemStorage implements CacheStorageInterface
      */
     public function save($key, CacheEntry $data)
     {
-        return $this->filesystem->put($key, serialize($data));
+        return $this->filesystem->write($key, serialize($data));
     }
 
     /**

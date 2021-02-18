@@ -3,7 +3,6 @@
 namespace Kevinrob\GuzzleCache\Storage;
 
 use Kevinrob\GuzzleCache\CacheEntry;
-use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
 
